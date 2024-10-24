@@ -194,8 +194,10 @@ func SetRoutes(r *gin.Engine) {
 
 	// ES Bulk update/insert
 	r.POST(fmt.Sprintf("%s/_bulk", es), AuthMiddleware("document.ESBulk"), ESMiddleware, document.ESBulk)
+	r.PUT(fmt.Sprintf("%s/_bulk", es), AuthMiddleware("document.ESBulk"), ESMiddleware, document.ESBulk)
 	r.POST(fmt.Sprintf("%s/:target/_bulk", es), AuthMiddleware("document.ESBulk"), ESMiddleware, document.ESBulk)
 	r.PUT(fmt.Sprintf("%s/:target/_bulk", es), AuthMiddleware("document.ESBulk"), ESMiddleware, document.ESBulk)
+	r.POST(fmt.Sprintf("%s/_refresh", es), AuthMiddleware("index.Refresh"), index.RefreshAll)
 	r.POST(fmt.Sprintf("%s/:target/_refresh", es), AuthMiddleware("index.Refresh"), index.Refresh)
 	// ES Document
 	r.POST(fmt.Sprintf("%s/:target/_doc", es), AuthMiddleware("document.CreateUpdate"), ESMiddleware, document.CreateUpdate)        // create

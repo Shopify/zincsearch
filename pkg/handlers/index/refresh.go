@@ -17,6 +17,7 @@ package index
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -44,5 +45,38 @@ func Refresh(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
 		return
 	}
+	c.JSON(http.StatusOK, meta.HTTPResponse{Message: "ok"})
+}
+
+// @Id RefreshAll
+// @Summary Resfresh index
+// @security BasicAuth
+// @Tags    Index
+// @Produce json
+// @Param   index  path  string  true  "Index"
+// @Success 200 {object} meta.HTTPResponse
+// @Failure 400 {object} meta.HTTPResponseError
+// @Router /api/index/{index}/refresh [post]
+func RefreshAll(c *gin.Context) {
+	names := core.ZINC_INDEX_LIST.ListName()
+	errors := []string{}
+
+	for _, name := range names {
+		index, exists := core.GetIndex(name)
+		if !exists {
+			errors = append(errors, "index "+name+" does not exists")
+			continue
+		}
+		if err := index.Reopen(); err != nil {
+			errors = append(errors, err.Error())
+			continue
+		}
+	}
+
+	if len(errors) > 0 {
+		c.JSON(http.StatusBadRequest, meta.HTTPResponseError{Error: strings.Join(errors, ",")})
+		return
+	}
+
 	c.JSON(http.StatusOK, meta.HTTPResponse{Message: "ok"})
 }
