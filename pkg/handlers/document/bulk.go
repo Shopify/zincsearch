@@ -145,15 +145,15 @@ func BulkWorker(target string, body io.Reader) (*BulkResponse, error) {
 			switch operation {
 			case "index":
 				bulkRes.Items = append(bulkRes.Items, map[string]BulkResponseItem{
-					"index": NewBulkResponseItem(bulkRes.Count, indexName, docID, "created", nil),
+					"index": NewBulkResponseItem(bulkRes.Count, indexName, docID, "created", nil, 200),
 				})
 			case "create":
 				bulkRes.Items = append(bulkRes.Items, map[string]BulkResponseItem{
-					"index": NewBulkResponseItem(bulkRes.Count, indexName, docID, "created", nil),
+					"index": NewBulkResponseItem(bulkRes.Count, indexName, docID, "created", nil, 200),
 				})
 			case "update":
 				bulkRes.Items = append(bulkRes.Items, map[string]BulkResponseItem{
-					"index": NewBulkResponseItem(bulkRes.Count, indexName, docID, "updated", nil),
+					"index": NewBulkResponseItem(bulkRes.Count, indexName, docID, "updated", nil, 200),
 				})
 			default:
 			}
@@ -202,17 +202,19 @@ func BulkWorker(target string, body io.Reader) (*BulkResponse, error) {
 						return nil, errors.New("bulk index data format error")
 					}
 
-					newIndex, _, err := core.GetOrCreateIndex(indexName, "", 0)
-					if err != nil {
-						return bulkRes, err
+					res := map[string]BulkResponseItem{}
+					index, exists := core.GetIndex(indexName)
+					if exists {
+						//delete
+						err = index.DeleteDocument(docID)
+						res["delete"] = NewBulkResponseItem(bulkRes.Count, indexName, docID, "deleted", err, 200)
+					} else {
+						res["delete"] = NewBulkResponseItem(bulkRes.Count, indexName, docID, "noop", err, 404)
+						bulkRes.Errors = true
 					}
 
-					// delete
-					err = newIndex.DeleteDocument(docID)
+					bulkRes.Items = append(bulkRes.Items, res)
 					bulkRes.Count++
-					bulkRes.Items = append(bulkRes.Items, map[string]BulkResponseItem{
-						"delete": NewBulkResponseItem(bulkRes.Count, indexName, docID, "deleted", err),
-					})
 				} else {
 					lastLineMetaData["_index"] = target
 					lastLineMetaData["operation"] = "index"
@@ -239,11 +241,11 @@ func DoesExistInThisRequest(slice []string, val string) int {
 	return -1
 }
 
-func NewBulkResponseItem(seqNo int64, index, id, result string, err error) BulkResponseItem {
+func NewBulkResponseItem(seqNo int64, index, id, result string, err error, status int) BulkResponseItem {
 	s_err := ""
 	if err != nil {
-	        s_err = err.Error()
-	}  
+		s_err = err.Error()
+	}
 	return BulkResponseItem{
 		Index:   index,
 		Type:    "_doc",
@@ -255,7 +257,7 @@ func NewBulkResponseItem(seqNo int64, index, id, result string, err error) BulkR
 			Successful: 1,
 			Failed:     0,
 		},
-		Status:      200,
+		Status:      status,
 		SeqNo:       globalSeqNo + seqNo,
 		PrimaryTerm: 1,
 		Error:       s_err,
