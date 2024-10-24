@@ -20,6 +20,7 @@ import (
 	"os"
 
 	"github.com/rs/zerolog/log"
+	"github.com/zincsearch/zincsearch/pkg/meta"
 )
 
 func init() {
@@ -28,7 +29,7 @@ func init() {
 	if err != nil {
 		log.Print(err)
 	}
-	if firstStart {
+	if firstStart && meta.IsAuthEnabled() {
 		if err := initFirstUser(); err != nil {
 			log.Fatal().Err(err).Msg("init first user")
 		}
