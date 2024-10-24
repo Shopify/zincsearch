@@ -16,6 +16,9 @@
 package routes
 
 import (
+	"bytes"
+	"io"
+	"io/ioutil"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -29,13 +32,29 @@ func AccessLog(app *gin.Engine) {
 		timeStart := time.Now()
 		c.Writer.Header().Set("Zinc", meta.Version)
 
+		buf, _ := ioutil.ReadAll(c.Request.Body)
+		rdr1 := ioutil.NopCloser(bytes.NewBuffer(buf))
+		rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf)) //We have to create a new Buffer, because rdr1 will be read.
+
+		c.Request.Body = rdr2
+
 		c.Next()
 
 		took := time.Since(timeStart) / time.Millisecond
+
 		log.Info().
 			Str("method", c.Request.Method).
 			Int("code", c.Writer.Status()).
 			Int("took", int(took)).
+			Str("body", readBody(rdr1)).
 			Msg(c.Request.RequestURI)
 	})
+}
+
+func readBody(reader io.Reader) string {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(reader)
+
+	s := buf.String()
+	return s
 }
