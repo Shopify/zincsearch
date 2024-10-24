@@ -23,11 +23,17 @@ import (
 
 	"github.com/zincsearch/zincsearch/pkg/auth"
 	"github.com/zincsearch/zincsearch/pkg/core"
+	"github.com/zincsearch/zincsearch/pkg/meta"
 )
 
 func AuthMiddleware(permission string) func(c *gin.Context) {
 	auth.AddPermission(permission)
 	return func(c *gin.Context) {
+		if !meta.IsAuthEnabled() {
+			c.Next()
+			return
+		}
+
 		// Get the Basic Authentication credentials
 		user, password, hasAuth := c.Request.BasicAuth()
 		if hasAuth {
