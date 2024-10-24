@@ -144,6 +144,15 @@ func TestCreateES(t *testing.T) {
 		wantErr bool
 	}{
 		{
+			name: "create without body",
+			args: args{
+				code:   http.StatusOK,
+				params: map[string]string{"target": ""},
+				result: `"acknowledged":true`,
+			},
+			wantErr: false,
+		},
+		{
 			name: "create by json",
 			args: args{
 				code:   http.StatusOK,
