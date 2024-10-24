@@ -22,13 +22,13 @@ import (
 // go build -a -ldflags "-X github.com/zincsearch/zincsearch/pkg/meta.AuthEnable=false" -o zincsearch
 var (
 	// Prefix used for ES routes
-	ESRoutePrefix = "/es"
+	ESRoutePrefix = ""
 
 	// Enable GUI route
-	GUIEnable = "true"
+	GUIEnable = "false"
 
 	// Enable Auth
-	AuthEnable = "true"
+	AuthEnable = "false"
 )
 
 func IsGUIEnabled() bool {
