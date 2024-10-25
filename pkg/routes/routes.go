@@ -159,6 +159,7 @@ func SetRoutes(r *gin.Engine) {
 
 	r.POST(fmt.Sprintf("%s/_search", es), AuthMiddleware("search.SearchDSL"), ESMiddleware, IndexAliasMiddleware, search.SearchDSL)
 	r.POST(fmt.Sprintf("%s/_msearch", es), AuthMiddleware("search.MultipleSearch"), ESMiddleware, IndexAliasMiddleware, search.MultipleSearch)
+	r.GET(fmt.Sprintf("%s/:target/_search", es), AuthMiddleware("search.SearchDSL"), ESMiddleware, IndexAliasMiddleware, search.SearchDSL)
 	r.POST(fmt.Sprintf("%s/:target/_search", es), AuthMiddleware("search.SearchDSL"), ESMiddleware, IndexAliasMiddleware, search.SearchDSL)
 	r.POST(fmt.Sprintf("%s/:target/_msearch", es), AuthMiddleware("search.MultipleSearch"), ESMiddleware, IndexAliasMiddleware, search.MultipleSearch)
 	r.POST(fmt.Sprintf("%s/:target/_delete_by_query", es), AuthMiddleware("search.DeleteByQuery"), IndexAliasMiddleware, search.DeleteByQuery)
@@ -176,6 +177,7 @@ func SetRoutes(r *gin.Engine) {
 
 	r.PUT(fmt.Sprintf("%s/:target", es), AuthMiddleware("index.CreateES"), ESMiddleware, index.CreateES)
 	r.HEAD(fmt.Sprintf("%s/:target", es), AuthMiddleware("index.Exists"), ESMiddleware, index.Exists)
+	r.GET(fmt.Sprintf("%s/_cat/indices", es), AuthMiddleware("index.CatES"), ESMiddleware, index.CatES)
 
 	r.GET(fmt.Sprintf("%s/:target/_mapping", es), AuthMiddleware("index.GetESMapping"), ESMiddleware, index.GetESMapping)
 	r.PUT(fmt.Sprintf("%s/:target/_mapping", es), AuthMiddleware("index.SetMapping"), ESMiddleware, index.SetMapping)
