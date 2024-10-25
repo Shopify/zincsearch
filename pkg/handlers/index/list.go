@@ -158,3 +158,56 @@ type IndexListResponse struct {
 	List []*core.Index `json:"list"`
 	Page *meta.Page    `json:"page"`
 }
+
+// @Id ListIndexes
+// @Summary List indexes
+// @security BasicAuth
+// @Tags    Index
+// @Param   page_num  query  integer false  "page num"
+// @Param   page_size query  integer false  "page size"
+// @Param   sort_by   query  string  false  "sort by"
+// @Param   desc      query  bool    false  "desc"
+// @Param   name      query  string  false  "name"
+// @Produce json
+// @Success 200 {object} IndexListResponse
+// @Router /es/_cat/indices [get]
+func CatES(c *gin.Context) {
+	page := meta.NewPage(c)
+	sortBy := c.DefaultQuery("sort_by", "index")
+	verbose, _ := strconv.ParseBool(c.DefaultQuery("v", "false"))
+	columns := strings.Split(c.DefaultQuery("h", "index"), ",")
+
+	items := core.ZINC_INDEX_LIST.ListStat()
+
+	switch sortBy {
+	default:
+		sort.Slice(items, func(i, j int) bool {
+			return items[i].GetName() < items[j].GetName()
+		})
+	}
+
+	page.Total = int64(len(items))
+	startIndex, endIndex := page.GetStartEndIndex()
+	if endIndex > 0 {
+		items = items[startIndex:endIndex]
+	} else {
+		items = []*core.Index{}
+	}
+
+	var res []string
+	if verbose {
+		res = append(res, strings.Join(columns, "\t"))
+	}
+	for _, item := range items {
+		line := []string{}
+		for _, column := range columns {
+			switch column {
+			case "index":
+				line = append(line, item.GetName())
+			}
+		}
+		res = append(res, strings.Join(line, "\t"))
+	}
+
+	c.String(http.StatusOK, strings.Join(res, "\n"))
+}
