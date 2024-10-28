@@ -193,6 +193,7 @@ func SetRoutes(r *gin.Engine) {
 	r.POST(fmt.Sprintf("%s/:target/_analyze", es), AuthMiddleware("index.Analyze"), ESMiddleware, index.Analyze)
 
 	r.POST(fmt.Sprintf("%s/_aliases", es), AuthMiddleware("index.AddOrRemoveESAlias"), ESMiddleware, index.AddOrRemoveESAlias)
+	r.PUT(fmt.Sprintf("%s/_aliases", es), AuthMiddleware("index.AddOrRemoveESAlias"), ESMiddleware, index.AddOrRemoveESAlias)
 
 	r.GET(fmt.Sprintf("%s/_alias", es), AuthMiddleware("index.GetESAliases"), ESMiddleware, index.GetESAliases)
 	r.GET(fmt.Sprintf("%s/:target/_alias", es), AuthMiddleware("index.GetESAliases"), ESMiddleware, index.GetESAliases)
