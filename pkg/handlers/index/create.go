@@ -73,7 +73,7 @@ func Create(c *gin.Context) {
 func CreateES(c *gin.Context) {
 	indexName := c.Param("target")
 
-	var newIndex meta.IndexSimple
+	var newIndex meta.IndexSimpleWithAlias
 	if err := zutils.GinBindJSON(c, &newIndex); err != nil && err.Error() != "EOF" {
 		zutils.GinRenderJSON(c, http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
 		return
@@ -82,10 +82,25 @@ func CreateES(c *gin.Context) {
 	// default the storage_type to disk, to provide the best possible integration
 	newIndex.StorageType = "disk"
 
-	err := CreateIndexWorker(&newIndex, indexName)
+	newIndexWithoutAlias := meta.IndexSimple{
+		Name:        newIndex.Name,
+		StorageType: newIndex.StorageType,
+		ShardNum:    newIndex.ShardNum,
+		Settings:    newIndex.Settings,
+		Mappings:    newIndex.Mappings,
+	}
+
+	err := CreateIndexWorker(&newIndexWithoutAlias, indexName)
 	if err != nil {
 		zutils.GinRenderJSON(c, http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
 		return
+	}
+
+	// create alias
+	if newIndex.Aliases != nil {
+		for alias := range newIndex.Aliases {
+			core.ZINC_INDEX_ALIAS_LIST.AddIndexesToAlias(alias, []string{indexName})
+		}
 	}
 
 	zutils.GinRenderJSON(c, http.StatusOK, gin.H{
