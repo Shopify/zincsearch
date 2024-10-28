@@ -49,7 +49,10 @@ func Delete(c *gin.Context) {
 	indexList := core.ZINC_INDEX_LIST.List()
 
 	for _, indexName := range strings.Split(indexNames, ",") {
-		if strings.Contains(indexName, "*") { // check for wildcard
+		if strings.Contains(indexName, "*") || indexName == "_all" { // check for wildcard
+			if indexName == "_all" {
+				indexName = "*"
+			}
 			err := deleteIndexWithWildcard(indexName, indexList)
 			if err != nil {
 				c.JSON(http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})

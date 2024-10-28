@@ -45,7 +45,7 @@ func Delete(c *gin.Context) {
 	indexName := c.Param("target")
 	index, exists := core.GetIndex(indexName)
 	if !exists {
-		c.JSON(http.StatusBadRequest, meta.HTTPResponseError{Error: "index does not exists"})
+		c.JSON(http.StatusNotFound, meta.HTTPResponseError{Error: "index does not exists"})
 		return
 	}
 
