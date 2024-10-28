@@ -177,6 +177,7 @@ func SetRoutes(r *gin.Engine) {
 
 	r.PUT(fmt.Sprintf("%s/:target", es), AuthMiddleware("index.CreateES"), ESMiddleware, index.CreateES)
 	r.HEAD(fmt.Sprintf("%s/:target", es), AuthMiddleware("index.Exists"), ESMiddleware, index.Exists)
+	r.DELETE(fmt.Sprintf("%s/:target", es), AuthMiddleware("index.Exists"), ESMiddleware, index.Delete)
 
 	r.GET(fmt.Sprintf("%s/_cat/indices", es), AuthMiddleware("index.CatIndices"), ESMiddleware, index.CatIndices)
 	r.GET(fmt.Sprintf("%s/_cat/indices/:target", es), AuthMiddleware("index.CatIndices"), ESMiddleware, index.CatIndices)
