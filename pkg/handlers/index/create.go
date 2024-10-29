@@ -74,7 +74,7 @@ func CreateES(c *gin.Context) {
 	indexName := c.Param("target")
 
 	var newIndex meta.IndexSimpleWithAlias
-	if err := zutils.GinBindJSON(c, &newIndex); err != nil && err.Error() != "EOF" {
+	if err := zutils.GinBindJSONWithEmptyBody(c, &newIndex); err != nil {
 		zutils.GinRenderJSON(c, http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
 		return
 	}

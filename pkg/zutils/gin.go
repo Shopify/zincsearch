@@ -32,6 +32,20 @@ func GinBindJSON(c *gin.Context, obj interface{}) error {
 	return json.Unmarshal(body, obj)
 }
 
+func GinBindJSONWithEmptyBody(c *gin.Context, obj interface{}) error {
+	body, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		return err
+	}
+	defer c.Request.Body.Close()
+
+	if len(body) == 0 {
+		return json.Unmarshal([]byte("{}"), obj)
+	}
+
+	return json.Unmarshal(body, obj)
+}
+
 func GinRenderJSON(c *gin.Context, code int, obj interface{}) {
 	if requestsPrettyRendering(c) {
 		c.IndentedJSON(code, obj)

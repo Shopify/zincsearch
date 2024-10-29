@@ -214,5 +214,6 @@ func SetRoutes(r *gin.Engine) {
 	r.POST(fmt.Sprintf("%s/:target/_create/:id", es), AuthMiddleware("document.CreateUpdate"), ESMiddleware, document.CreateUpdate) // create
 	r.POST(fmt.Sprintf("%s/:target/_update/:id", es), AuthMiddleware("document.Update"), ESMiddleware, document.Update)             // update part of document
 	r.DELETE(fmt.Sprintf("%s/:target/_doc/:id", es), AuthMiddleware("document.Delete"), ESMiddleware, document.Delete)              // delete
+	r.HEAD(fmt.Sprintf("%s/:target/_doc/:id", es), AuthMiddleware("document.Get"), ESMiddleware, document.Get)                      // get
 	r.GET(fmt.Sprintf("%s/:target/_doc/:id", es), AuthMiddleware("document.Get"), ESMiddleware, document.Get)                       // get
 }
