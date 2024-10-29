@@ -21,6 +21,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/zincsearch/zincsearch/pkg/core"
+	"github.com/zincsearch/zincsearch/pkg/errors"
 	"github.com/zincsearch/zincsearch/pkg/meta"
 	"github.com/zincsearch/zincsearch/pkg/zutils"
 )
@@ -55,7 +56,12 @@ func Get(c *gin.Context) {
 
 	source, err := index.GetDocument(docID)
 	if err != nil {
-		zutils.GinRenderJSON(c, http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
+		status := http.StatusBadRequest
+		if err == errors.ErrorIDNotFound {
+			status = http.StatusNotFound
+		}
+
+		zutils.GinRenderJSON(c, status, meta.HTTPResponseError{Error: err.Error()})
 		return
 	}
 	zutils.GinRenderJSON(c, http.StatusOK, source)
