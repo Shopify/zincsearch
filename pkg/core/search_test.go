@@ -179,7 +179,7 @@ func TestIndex_Search(t *testing.T) {
 							Query: "angeles",
 						},
 					},
-					Timeout: 1,
+					Timeout: "1s",
 					Size:    10,
 					Fields:  []interface{}{"address.city"},
 					Highlight: &meta.Highlight{
@@ -200,7 +200,7 @@ func TestIndex_Search(t *testing.T) {
 					Query: &meta.Query{
 						MatchAll: &meta.MatchAllQuery{},
 					},
-					Timeout: 1,
+					Timeout: "1s",
 					Size:    0,
 					Aggregations: map[string]meta.Aggregations{
 						"hobby": {

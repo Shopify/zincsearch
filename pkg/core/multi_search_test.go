@@ -78,7 +78,7 @@ func TestMultiSearch(t *testing.T) {
 					Query: &meta.Query{
 						MatchAll: &meta.MatchAllQuery{},
 					},
-					Timeout: 1,
+					Timeout: "1s",
 				},
 			},
 			wantErr: false,

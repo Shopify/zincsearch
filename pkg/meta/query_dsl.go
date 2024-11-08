@@ -28,7 +28,7 @@ type ZincQuery struct {
 	Explain        bool                    `json:"explain"`
 	From           int                     `json:"from"`
 	Size           int                     `json:"size"`
-	Timeout        int                     `json:"timeout"`
+	Timeout        string                  `json:"timeout"`
 	TrackTotalHits bool                    `json:"track_total_hits"`
 }
 
