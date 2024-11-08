@@ -23,4 +23,5 @@ import (
 
 func ExistsQuery(query map[string]interface{}) (bluge.Query, error) {
 	return nil, errors.New(errors.ErrorTypeNotImplemented, "[exists] query doesn't support")
+	// return bluge.NewWildcardQuery("*").SetField(query["field"].(string)), nil
 }

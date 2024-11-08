@@ -85,10 +85,16 @@ func MultiSearch(indexNames []string, query *meta.ZincQuery) (*meta.SearchRespon
 		return nil, err
 	}
 
+	timeout, err := time.ParseDuration(query.Timeout)
+	if err != nil {
+		log.Printf("index.SearchV2: error parsing timeout: %s", err.Error())
+		return nil, err
+	}
+
 	ctx := context.Background()
 	var cancel context.CancelFunc
-	if query.Timeout > 0 {
-		ctx, cancel = context.WithTimeout(context.Background(), time.Duration(query.Timeout)*time.Second)
+	if timeout > 0 {
+		ctx, cancel = context.WithTimeout(context.Background(), timeout)
 		defer cancel()
 	}
 

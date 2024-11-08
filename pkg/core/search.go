@@ -52,10 +52,16 @@ func (index *Index) Search(query *meta.ZincQuery) (*meta.SearchResponse, error) 
 		}
 	}()
 
+	timeout, err := time.ParseDuration(query.Timeout)
+	if err != nil {
+		log.Printf("index.SearchV2: error parsing timeout: %s", err.Error())
+		return nil, err
+	}
+
 	ctx := context.Background()
 	var cancel context.CancelFunc
-	if query.Timeout > 0 {
-		ctx, cancel = context.WithTimeout(context.Background(), time.Duration(query.Timeout)*time.Second)
+	if timeout.Seconds() > 0 {
+		ctx, cancel = context.WithTimeout(context.Background(), timeout)
 		defer cancel()
 	}
 
