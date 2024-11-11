@@ -162,6 +162,18 @@ func searchV2(shardNum, readerNum int64, dmi search.DocumentMatchIterator, query
 			Fields:    fieldsData,
 			Highlight: highlightData,
 		}
+
+		if query.Sort != nil {
+			hit.Sort = make([]interface{}, 0, len(query.Sort.(search.SortOrder)))
+			for _, field := range query.Sort.(search.SortOrder).Fields() {
+				if v, ok := sourceData[field]; ok {
+					hit.Sort = append(hit.Sort, v)
+				} else {
+					hit.Sort = append(hit.Sort, field)
+				}
+			}
+		}
+
 		Hits = append(Hits, hit)
 
 		next, err = dmi.Next()
