@@ -49,6 +49,7 @@ type Hit struct {
 	Source    interface{}            `json:"_source,omitempty"`
 	Fields    map[string]interface{} `json:"fields,omitempty"`
 	Highlight map[string]interface{} `json:"highlight,omitempty"`
+	Sort      []interface{}          `json:"sort,omitempty"`
 }
 
 type Total struct {

@@ -17,11 +17,11 @@ package query
 
 import (
 	"github.com/blugelabs/bluge"
-
-	"github.com/zincsearch/zincsearch/pkg/errors"
 )
 
 func ExistsQuery(query map[string]interface{}) (bluge.Query, error) {
-	return nil, errors.New(errors.ErrorTypeNotImplemented, "[exists] query doesn't support")
-	// return bluge.NewWildcardQuery("*").SetField(query["field"].(string)), nil
+	// return nil, errors.New(errors.ErrorTypeNotImplemented, "[exists] query doesn't support")
+
+	// TODO: Implement ExistsQuery, for now return a wildcard query
+	return bluge.NewWildcardQuery("*").SetField(query["field"].(string)), nil
 }
