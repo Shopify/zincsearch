@@ -15,11 +15,16 @@
 
 package meta
 
+import (
+	"encoding/json"
+	"errors"
+)
+
 type Analyzer struct {
-	CharFilter  []string `json:"char_filter,omitempty"`
-	Tokenizer   string   `json:"tokenizer,omitempty"`
-	TokenFilter []string `json:"token_filter,omitempty"`
-	Filter      []string `json:"filter,omitempty"` // compatibility with es, alias for TokenFilter
+	CharFilter  []string      `json:"char_filter,omitempty"`
+	Tokenizer   string        `json:"tokenizer,omitempty"`
+	TokenFilter []string      `json:"token_filter,omitempty"`
+	Filter      ArrayOrString `json:"filter,omitempty"` // compatibility with es, alias for TokenFilter
 
 	// options for compatible
 	Type      string   `json:"type,omitempty"`
@@ -33,4 +38,26 @@ type Tokenizer struct {
 }
 type TokenFilter struct {
 	Type string `json:"type"`
+}
+
+type ArrayOrString []string
+
+func (w *ArrayOrString) UnmarshalJSON(data []byte) (err error) {
+	d := string(data)
+
+	if d[0] != '[' && d[len(d)-1] != ']' {
+		d = "[" + d + "]"
+	} else if d[0] == '[' && d[len(d)-1] == ']' {
+		// do nothing
+	} else {
+		return errors.New("invalid json format, should be array")
+	}
+	result := []string{}
+	err = json.Unmarshal([]byte(d), &result)
+	if err != nil {
+		return err
+	}
+	*w = result
+
+	return nil
 }
