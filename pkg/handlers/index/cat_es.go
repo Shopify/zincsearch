@@ -28,6 +28,11 @@ func CatIndices(c *gin.Context) {
 	columns := strings.Split(c.DefaultQuery("h", strings.Join(catIndicesColumns, ",")), ",")
 
 	for _, column := range columns {
+		switch column {
+		case "i":
+			column = "index"
+		}
+
 		if !slices.Contains(catIndicesColumns, column) {
 			c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("invalid column: %s", column)})
 			return

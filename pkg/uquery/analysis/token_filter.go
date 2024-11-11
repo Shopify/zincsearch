@@ -137,7 +137,7 @@ func RequestTokenFilterSingle(name string, options interface{}) (analysis.TokenF
 		return zinctoken.NewRegexpTokenFilter(options)
 	case "shingle":
 		return zinctoken.NewShingleTokenFilter(options)
-	case "trim":
+	case "trim", "word_delimiter_graph":
 		return zinctoken.NewTrimTokenFilter()
 	case "stop":
 		return zinctoken.NewStopTokenFilter(options)
