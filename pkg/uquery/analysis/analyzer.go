@@ -207,7 +207,7 @@ func QueryAnalyzer(data map[string]*analysis.Analyzer, name string) (*analysis.A
 		// language filters
 	case "ar", "arabic":
 		return ar.Analyzer(), nil
-	case "cjk": // for Asia language
+	case "cjk", "kuromoji": // for Asia language
 		return cjk.Analyzer(), nil
 	case "ckb", "sorani":
 		return ckb.Analyzer(), nil

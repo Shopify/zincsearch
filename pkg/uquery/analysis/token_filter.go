@@ -105,6 +105,12 @@ func RequestTokenFilterSlice(data []interface{}) ([]analysis.TokenFilter, error)
 func RequestTokenFilterSingle(name string, options interface{}) (analysis.TokenFilter, error) {
 	name = strings.ToLower(name)
 	switch name {
+
+	case "ascii_folding", "asciifolding":
+		return zinctoken.NewASCIIFoldingFilter()
+	case "synonym":
+		return zinctoken.NewSynonymTokenFilter(options)
+
 	case "apostrophe":
 		return token.NewApostropheFilter(), nil
 	case "camel_case", "camelcase":

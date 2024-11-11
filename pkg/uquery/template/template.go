@@ -74,6 +74,8 @@ func Request(data map[string]interface{}) (*meta.IndexTemplate, error) {
 			default:
 				return nil, errors.New(errors.ErrorTypeXContentParseException, "[template] template value should be an object")
 			}
+		case "version":
+			continue
 		default:
 			return nil, errors.New(errors.ErrorTypeParsingException, fmt.Sprintf("[template] unknown option [%s]", k))
 		}
