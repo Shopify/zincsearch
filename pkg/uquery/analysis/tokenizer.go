@@ -103,6 +103,11 @@ func RequestTokenizerSingle(name string, options interface{}) (analysis.Tokenize
 		return chs.NewGseStandardTokenizer(), nil
 	case "gse_search":
 		return chs.NewGseSearchTokenizer(), nil
+
+	case "uax_url_email":
+		// TODO: Add proper tokenizers
+		return tokenizer.NewLetterTokenizer(), nil
+
 	default:
 		return nil, errors.New(errors.ErrorTypeXContentParseException, fmt.Sprintf("[tokenizer] unknown tokenizer [%s]", name))
 	}

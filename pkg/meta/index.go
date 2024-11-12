@@ -68,8 +68,6 @@ type IndexSettings struct {
 	NumberOfShards   int64          `json:"number_of_shards,omitempty"`
 	NumberOfReplicas int64          `json:"number_of_replicas,omitempty"`
 	Analysis         *IndexAnalysis `json:"analysis,omitempty"`
-
-	// Extra            map[string]interface{} `json:"-,omitempty"`
 }
 
 type IndexAnalysis struct {

@@ -82,6 +82,8 @@ func RequestCharFilterSlice(data []interface{}) ([]analysis.CharFilter, error) {
 func RequestCharFilterSingle(name string, options interface{}) (analysis.CharFilter, error) {
 	name = strings.ToLower(name)
 	switch name {
+	case "filename_whitespace_char_filter":
+		return zincchar.NewMappingCharFilter(options)
 	case "ascii_folding", "asciifolding":
 		return char.NewASCIIFoldingFilter(), nil
 	case "html", "html_strip":

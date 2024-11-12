@@ -32,7 +32,7 @@ func NewMappingCharFilter(options interface{}) (analysis.CharFilter, error) {
 		return nil, errors.New(errors.ErrorTypeParsingException, "[char_filter] mapping option [mappings] should be exists")
 	}
 	for _, mapping := range mappings {
-		if !strings.Contains(mapping, " => ") {
+		if !strings.Contains(mapping, "=>") {
 			return nil, errors.New(errors.ErrorTypeRuntimeException, fmt.Sprintf("[char_filter] mapping option [mappings] Invalid Mapping Rule: [%s], should be [old => new]", mapping))
 		}
 	}
