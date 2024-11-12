@@ -28,12 +28,12 @@ type MappingCharFilter struct {
 func NewMappingCharFilter(mappings []string) *MappingCharFilter {
 	m := &MappingCharFilter{}
 	for _, field := range mappings {
-		field := strings.Split(field, " => ")
+		field := strings.Split(field, "=>")
 		if len(field) != 2 {
 			continue
 		}
-		m.old = append(m.old, []byte(field[0]))
-		m.new = append(m.new, []byte(field[1]))
+		m.old = append(m.old, []byte(strings.TrimSpace(field[0])))
+		m.new = append(m.new, []byte(strings.TrimSpace(field[1])))
 	}
 
 	return m
