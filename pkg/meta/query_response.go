@@ -61,3 +61,8 @@ type AggregationResponse struct {
 	Buckets  interface{} `json:"buckets,omitempty"`  // slice or map
 	Interval string      `json:"interval,omitempty"` // support for auto_date_histogram_aggregation
 }
+
+type CountResponse struct {
+	Count  int    `json:"count"`
+	Shards Shards `json:"_shards"`
+}
