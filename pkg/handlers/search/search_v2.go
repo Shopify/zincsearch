@@ -79,6 +79,25 @@ func SearchDSL(c *gin.Context) {
 	zutils.GinRenderJSON(c, http.StatusOK, resp)
 }
 
+func CountDSL(c *gin.Context) {
+	indexName := c.Param("target")
+
+	query := &meta.ZincQuery{Size: 10}
+	if err := zutils.GinBindJSONWithEmptyBody(c, query); err != nil {
+		log.Printf("handlers.search.countDSL: %s", err.Error())
+		zutils.GinRenderJSON(c, http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
+		return
+	}
+
+	resp, err := countFromSearch(strings.Split(indexName, ","), query)
+	if err != nil {
+		errors.HandleError(c, err)
+		return
+	}
+
+	zutils.GinRenderJSON(c, http.StatusOK, resp)
+}
+
 // MultipleSearch like bulk searches
 //
 // @Id MSearch
@@ -172,4 +191,21 @@ func searchIndex(indexNames []string, query *meta.ZincQuery) (*meta.SearchRespon
 		resp, err = index.Search(query)
 	}
 	return resp, err
+}
+
+func countFromSearch(indexNames []string, query *meta.ZincQuery) (*meta.CountResponse, error) {
+	searchResp, err := searchIndex(indexNames, query)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *meta.CountResponse
+	if searchResp != nil {
+		resp = &meta.CountResponse{
+			Count:  searchResp.Hits.Total.Value,
+			Shards: searchResp.Shards,
+		}
+	}
+
+	return resp, nil
 }
