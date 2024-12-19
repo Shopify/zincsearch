@@ -186,7 +186,7 @@ func searchIndex(indexNames []string, query *meta.ZincQuery) (*meta.SearchRespon
 	} else {
 		index, exists := core.GetIndex(indexName)
 		if !exists {
-			return nil, fmt.Errorf("index %s does not exists", indexName)
+			return nil, errors.New(errors.ErrorIndexNotFound, fmt.Sprintf("index %s does not exists", indexName))
 		}
 		resp, err = index.Search(query)
 	}
