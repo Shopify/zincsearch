@@ -43,7 +43,7 @@ func TestSearchV2(t *testing.T) {
 			body := bytes.NewBuffer(nil)
 			body.WriteString(`{}`)
 			resp := request("POST", "/es/notExistSearch/_search", body)
-			assert.Equal(t, http.StatusBadRequest, resp.Code)
+			assert.Equal(t, http.StatusNotFound, resp.Code)
 		})
 		t.Run("search document with exist indexName", func(t *testing.T) {
 			body := bytes.NewBuffer(nil)
@@ -187,6 +187,21 @@ func TestSearchV2(t *testing.T) {
 			err := json.Unmarshal(resp.Body.Bytes(), data)
 			assert.NoError(t, err)
 			assert.GreaterOrEqual(t, data.Hits.Total.Value, 1)
+		})
+	})
+
+	t.Run("POST /es/:target/_count", func(t *testing.T) {
+		t.Run("count document with not exist indexName", func(t *testing.T) {
+			body := bytes.NewBuffer(nil)
+			body.WriteString(`{}`)
+			resp := request("POST", "/es/notExistcount/_count", body)
+			assert.Equal(t, http.StatusNotFound, resp.Code)
+		})
+		t.Run("count document with exist indexName", func(t *testing.T) {
+			body := bytes.NewBuffer(nil)
+			body.WriteString(`{"query": {"match_all":{}}, "size":10}`)
+			resp := request("POST", "/es/"+indexName+"/_count", body)
+			assert.Equal(t, http.StatusOK, resp.Code)
 		})
 	})
 

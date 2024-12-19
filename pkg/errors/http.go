@@ -25,7 +25,12 @@ func HandleError(c *gin.Context, err error) {
 	if err != nil {
 		switch v := err.(type) {
 		case *Error:
-			c.JSON(http.StatusBadRequest, gin.H{"error": v})
+			switch v.Type {
+			case ErrorIndexNotFound:
+				c.JSON(http.StatusNotFound, gin.H{"error": v})
+			default:
+				c.JSON(http.StatusBadRequest, gin.H{"error": v})
+			}
 		default:
 			c.JSON(http.StatusBadRequest, gin.H{"error": v.Error()})
 		}

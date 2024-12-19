@@ -28,6 +28,7 @@ const (
 	ErrorTypeRuntimeException         = "runtime_exception"
 	ErrorTypeNotImplemented           = "not_implemented"
 	ErrorTypeInvalidArgument          = "invalid_argument"
+	ErrorIndexNotFound                = "index_not_found"
 )
 
 var ErrorIDNotFound = errors.New("id not found")
