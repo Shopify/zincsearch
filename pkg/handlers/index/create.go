@@ -29,37 +29,6 @@ import (
 	"github.com/zincsearch/zincsearch/pkg/zutils"
 )
 
-// @Id CreateIndex
-// @Summary Create index
-// @security BasicAuth
-// @Tags    Index
-// @Accept  json
-// @Produce json
-// @Param   data body meta.IndexSimple true "Index data"
-// @Success 200 {object} meta.HTTPResponseIndex
-// @Failure 400 {object} meta.HTTPResponseError
-// @Router /api/index [post]
-func Create(c *gin.Context) {
-	var newIndex meta.IndexSimple
-	if err := zutils.GinBindJSON(c, &newIndex); err != nil {
-		zutils.GinRenderJSON(c, http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
-		return
-	}
-
-	indexName := c.Param("target")
-	err := CreateIndexWorker(&newIndex, indexName)
-	if err != nil {
-		zutils.GinRenderJSON(c, http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
-		return
-	}
-
-	zutils.GinRenderJSON(c, http.StatusOK, meta.HTTPResponseIndex{
-		Message:     "ok",
-		Index:       newIndex.Name,
-		StorageType: newIndex.StorageType,
-	})
-}
-
 // @Id ESCreateIndex
 // @Summary Create index for compatible ES
 // @security BasicAuth
@@ -69,7 +38,7 @@ func Create(c *gin.Context) {
 // @Param   data  body  meta.IndexSimple true "Index data"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} meta.HTTPResponse
-// @Router /es/{index} [put]
+// @Router /{index} [put]
 func CreateES(c *gin.Context) {
 	indexName := c.Param("target")
 
@@ -82,25 +51,14 @@ func CreateES(c *gin.Context) {
 	// default the storage_type to disk, to provide the best possible integration
 	newIndex.StorageType = "disk"
 
-	newIndexWithoutAlias := meta.IndexSimple{
-		Name:        newIndex.Name,
-		StorageType: newIndex.StorageType,
-		ShardNum:    newIndex.ShardNum,
-		Settings:    newIndex.Settings,
-		Mappings:    newIndex.Mappings,
+	if newIndex.Name == "" && indexName != "" {
+		newIndex.Name = indexName
 	}
 
-	err := CreateIndexWorker(&newIndexWithoutAlias, indexName)
+	err := CreateIndexWorker(&newIndex)
 	if err != nil {
 		zutils.GinRenderJSON(c, http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
 		return
-	}
-
-	// create alias
-	if newIndex.Aliases != nil {
-		for alias := range newIndex.Aliases {
-			core.ZINC_INDEX_ALIAS_LIST.AddIndexesToAlias(alias, []string{indexName})
-		}
 	}
 
 	zutils.GinRenderJSON(c, http.StatusOK, gin.H{
@@ -110,11 +68,8 @@ func CreateES(c *gin.Context) {
 	})
 }
 
-func CreateIndexWorker(newIndex *meta.IndexSimple, indexName string) error {
+func CreateIndexWorker(newIndex *meta.IndexSimpleWithAlias) error {
 	newIndex.StorageType = "disk"
-	if newIndex.Name == "" && indexName != "" {
-		newIndex.Name = indexName
-	}
 
 	if newIndex.Name == "" {
 		return errors.New("index.name should be not empty")
@@ -158,6 +113,13 @@ func CreateIndexWorker(newIndex *meta.IndexSimple, indexName string) error {
 
 	// update mappings
 	_ = index.SetMappings(mappings)
+
+	// create alias
+	if newIndex.Aliases != nil {
+		for alias := range newIndex.Aliases {
+			core.ZINC_INDEX_ALIAS_LIST.AddIndexesToAlias(alias, []string{newIndex.Name})
+		}
+	}
 
 	// store index
 	if err = core.StoreIndex(index); err != nil {

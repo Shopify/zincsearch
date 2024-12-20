@@ -35,7 +35,7 @@ you need pass environment to enable gse support:
 
 ## API example
 
-POST http://localhost:4080/es/_analyze
+POST http://localhost:4080/_analyze
 
 ```
 {
@@ -44,7 +44,7 @@ POST http://localhost:4080/es/_analyze
 }
 ```
 
-POST http://localhost:4080/es/_analyze
+POST http://localhost:4080/_analyze
 
 ```
 {
@@ -90,7 +90,7 @@ POST http://localhost:4080/api/my-index-chs/document
 }
 ```
 
-POST http://localhost:4080/es/my-index-chs/_search
+POST http://localhost:4080/my-index-chs/_search
 
 ```
 {

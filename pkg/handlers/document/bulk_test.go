@@ -24,56 +24,6 @@ import (
 	"github.com/zincsearch/zincsearch/test/utils"
 )
 
-func TestBulk(t *testing.T) {
-	type args struct {
-		code   int
-		data   string
-		params map[string]string
-		result string
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		{
-			name: "bulk",
-			args: args{
-				code: http.StatusOK,
-				data: `{ "index" : { "_index" : "document.bulk" } } 
-				{"Year": 1896, "City": "Athens", "Sport": "Aquatics", "Discipline": "Swimming", "Athlete": "HAJOS, Alfred", "Country": "HUN", "Gender": "Men", "Event": "100M Freestyle", "Medal": "Gold", "Season": "summer"}
-				{ "create" : { "_index" : "document.bulk" } } 
-				{"Year": 1896, "City": "Athens", "Sport": "Aquatics", "Discipline": "Swimming", "Athlete": "HERSCHMANN, Otto", "Country": "AUT", "Gender": "Men", "Event": "100M Freestyle", "Medal": "Silver", "Season": "summer"}
-				{ "update" : { "_index" : "document.bulk", "_id": "1" } } 
-				{"Year": 1896, "City": "Athens", "Sport": "Aquatics", "Discipline": "Swimming", "Athlete": "HERSCHMANN, Otto", "Country": "AUT", "Gender": "Men", "Event": "100M Freestyle", "Medal": "Silver", "Season": "summer"}
-				{ "delete" : { "_index" : "document.bulk", "_id": "1" } } `,
-				params: map[string]string{"target": "document.bulk"},
-				result: "",
-			},
-		},
-		{
-			name: "error",
-			args: args{
-				code: http.StatusOK,
-				data: `{ "index" : { "_index" : "document.bulk" } } 
-				{"Year": 1896, "City": "Athens", "Sport": "Aquatics", "Discipline": "Swimming", "Athlete": "HAJOS, Alfred", "Country": "HUN", "Gender": "Men", "Event": "100M Freestyle", "Medal": "Gold", "Season": "summer"}
-				{ "delete" : { "_index" : "document.bulk", "_id": "1"x } } `,
-				params: map[string]string{"target": "document.bulk"},
-				result: "",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c, w := utils.NewGinContext()
-			utils.SetGinRequestData(c, tt.args.data)
-			utils.SetGinRequestParams(c, tt.args.params)
-			Bulk(c)
-			assert.Equal(t, tt.args.code, w.Code)
-			assert.Contains(t, w.Body.String(), tt.args.result)
-		})
-	}
-}
-
 func TestESBulk(t *testing.T) {
 	type args struct {
 		code   int

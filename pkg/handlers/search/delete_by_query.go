@@ -25,7 +25,7 @@ import (
 // @Param   query  body  meta.ZincQueryForSDK true  "Query"
 // @Success 200 {object} meta.HTTPResponseDeleteByQuery
 // @Failure 400 {object} meta.HTTPResponseError
-// @Router /es/{index}/_delete_by_query [post]
+// @Router /{index}/_delete_by_query [post]
 func DeleteByQuery(c *gin.Context) {
 	start := time.Now()
 	query := &meta.ZincQuery{Size: 10}

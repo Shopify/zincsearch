@@ -29,36 +29,9 @@ import (
 	"github.com/zincsearch/zincsearch/pkg/config"
 	"github.com/zincsearch/zincsearch/pkg/core"
 	"github.com/zincsearch/zincsearch/pkg/ider"
-	"github.com/zincsearch/zincsearch/pkg/meta"
 	"github.com/zincsearch/zincsearch/pkg/zutils"
 	"github.com/zincsearch/zincsearch/pkg/zutils/json"
 )
-
-// Bulk accept multiple documents, first line index metadata, second line document
-//
-// @Id Bulk
-// @Summary Bulk documents
-// @security BasicAuth
-// @Tags    Document
-// @Accept  plain
-// @Produce json
-// @Param   query  body  string  true  "Query"
-// @Success 200 {object} meta.HTTPResponseRecordCount
-// @Failure 500 {object} meta.HTTPResponseError
-// @Router /api/_bulk [post]
-func Bulk(c *gin.Context) {
-	target := c.Param("target")
-
-	defer c.Request.Body.Close()
-
-	ret, err := BulkWorker(target, c.Request.Body)
-	if err != nil {
-		zutils.GinRenderJSON(c, http.StatusInternalServerError, meta.HTTPResponseError{Error: err.Error()})
-		return
-	}
-
-	zutils.GinRenderJSON(c, http.StatusOK, meta.HTTPResponseRecordCount{Message: "bulk data inserted", RecordCount: ret.Count})
-}
 
 // ESBulk accept multiple documents, first line index metadata, second line document
 //
@@ -71,7 +44,7 @@ func Bulk(c *gin.Context) {
 // @Param   query  body  string  true  "Query"
 // @Success 200 {object} map[string]interface{}
 // @Failure 500 {object} meta.HTTPResponseError
-// @Router /es/_bulk [post]
+// @Router /_bulk [post]
 func ESBulk(c *gin.Context) {
 	target := c.Param("target")
 

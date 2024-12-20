@@ -20,7 +20,7 @@ import (
 // @Param   index path  string  true  "Index"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} meta.HTTPResponse
-// @Router /es/{index}/_mapping [get]
+// @Router /{index}/_mapping [get]
 func GetESMapping(c *gin.Context) {
 	indexName := c.Param("target")
 	index, exists := core.GetIndex(indexName)

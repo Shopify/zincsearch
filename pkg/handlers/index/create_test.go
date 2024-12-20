@@ -26,111 +26,6 @@ import (
 	"github.com/zincsearch/zincsearch/test/utils"
 )
 
-func TestCreate(t *testing.T) {
-	type args struct {
-		code       int
-		data       string
-		params     map[string]string
-		result     string
-		mappingRes string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		{
-			name: "create by json",
-			args: args{
-				code:   http.StatusOK,
-				data:   `{"name":"TestIndexCreate.index_1","disk":"disk"}`,
-				params: map[string]string{"target": ""},
-				result: `"message":"ok"`,
-			},
-			wantErr: false,
-		},
-		{
-			name: "create by target",
-			args: args{
-				code:   http.StatusOK,
-				data:   `{"name":"","disk":"disk"}`,
-				params: map[string]string{"target": "TestIndexCreate.index_2"},
-				result: `"message":"ok"`,
-			},
-			wantErr: false,
-		},
-		{
-			name: "create by error json",
-			args: args{
-				code:   http.StatusBadRequest,
-				data:   `{"name":"TestIndexCreate.index_3"x,"disk":"disk"}`,
-				params: map[string]string{"target": ""},
-				result: `"error":`,
-			},
-			wantErr: true,
-		},
-		{
-			name: "create by empty",
-			args: args{
-				code:   http.StatusBadRequest,
-				data:   `{"name":"","disk":"disk"}`,
-				params: map[string]string{"target": ""},
-				result: "should be not empty",
-			},
-			wantErr: true,
-		},
-		{
-			name: "create with analyzer",
-			args: args{
-				code:   http.StatusOK,
-				data:   `{"name":"TestIndexCreate.index_5","disk":"disk","settings":{"analysis":{"analyzer":{"test_analyzer":{"type":"custom","tokenizer":"standard","filter":["lowercase"]}}}}}`,
-				params: map[string]string{"target": ""},
-				result: `"message":"ok"`,
-			},
-			wantErr: false,
-		},
-		{
-			name: "create with sub-fields",
-			args: args{
-				code:       http.StatusOK,
-				data:       `{"name":"TestIndexCreate.index_6","disk":"disk","mappings":{"properties":{"@timestamp":{"type":"date"},"Athlete":{"type":"text","fields":{"my_keyword":{"type":"keyword"}}}}}}`,
-				mappingRes: `"Athlete.my_keyword":{"type":"keyword"`,
-				params:     map[string]string{"target": ""},
-				result:     `"message":"ok"`,
-			},
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c, w := utils.NewGinContext()
-			utils.SetGinRequestData(c, tt.args.data)
-			utils.SetGinRequestParams(c, tt.args.params)
-			Create(c)
-			assert.Equal(t, tt.args.code, w.Code)
-			assert.Contains(t, w.Body.String(), tt.args.result)
-
-			resp := make(map[string]string)
-			err := json.Unmarshal(w.Body.Bytes(), &resp)
-			assert.NoError(t, err)
-
-			if tt.args.mappingRes != "" {
-				c, w := utils.NewGinContext()
-				utils.SetGinRequestParams(c, map[string]string{"target": resp["index"]})
-
-				GetMapping(c)
-				assert.Equal(t, tt.args.code, w.Code)
-				assert.Contains(t, w.Body.String(), tt.args.mappingRes)
-			}
-
-			if !tt.wantErr {
-				err = core.DeleteIndex(resp["index"])
-				assert.NoError(t, err)
-			}
-		})
-	}
-}
-
 func TestCreateES(t *testing.T) {
 	type args struct {
 		code   int
@@ -143,15 +38,6 @@ func TestCreateES(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		{
-			name: "create without body",
-			args: args{
-				code:   http.StatusOK,
-				params: map[string]string{"target": ""},
-				result: `"acknowledged":true`,
-			},
-			wantErr: false,
-		},
 		{
 			name: "create by json",
 			args: args{

@@ -60,7 +60,7 @@ func TestGet(t *testing.T) {
 		{
 			name: "not exists id",
 			args: args{
-				code: http.StatusBadRequest,
+				code: http.StatusNotFound,
 				params: map[string]string{
 					"target": "TestDocumentGet.index_1",
 					"id":     "2",
@@ -71,7 +71,7 @@ func TestGet(t *testing.T) {
 		{
 			name: "not exists index",
 			args: args{
-				code: http.StatusBadRequest,
+				code: http.StatusNotFound,
 				params: map[string]string{
 					"target": "TestDocumentGet.index_2",
 					"id":     "1",
