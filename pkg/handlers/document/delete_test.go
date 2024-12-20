@@ -71,7 +71,7 @@ func TestDelete(t *testing.T) {
 		{
 			name: "not exists index",
 			args: args{
-				code: http.StatusBadRequest,
+				code: http.StatusNotFound,
 				params: map[string]string{
 					"target": "TestDocumentDelete.index_2",
 					"id":     "1",

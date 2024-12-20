@@ -38,5 +38,5 @@ func Exists(c *gin.Context) {
 // @Param   index  path  string  true  "Index"
 // @Success 200 {object} meta.HTTPResponse
 // @Failure 404 {object} meta.HTTPResponse
-// @Router /es/{index} [head]
+// @Router /{index} [head]
 func ESExists() {}

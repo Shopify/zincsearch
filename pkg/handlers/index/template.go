@@ -33,7 +33,7 @@ import (
 // @Produce json
 // @Success 200 {object} []meta.Template
 // @Failure 400 {object} meta.HTTPResponseError
-// @Router /es/_index_template [get]
+// @Router /_index_template [get]
 func ListTemplate(c *gin.Context) {
 	pattern := c.Query("pattern")
 	templates, err := core.ListTemplates(pattern)
@@ -52,7 +52,7 @@ func ListTemplate(c *gin.Context) {
 // @Param   name path  string  true  "Template"
 // @Success 200 {object} meta.IndexTemplate
 // @Failure 400 {object} meta.HTTPResponseError
-// @Router /es/_index_template/{name} [get]
+// @Router /_index_template/{name} [get]
 func GetTemplate(c *gin.Context) {
 	name := c.Param("target")
 	if name == "" {
@@ -80,7 +80,7 @@ func GetTemplate(c *gin.Context) {
 // @Param   template body meta.IndexTemplate true "Template data"
 // @Success 200 {object} meta.HTTPResponseTemplate
 // @Failure 400 {object} meta.HTTPResponseError
-// @Router /es/_index_template [post]
+// @Router /_index_template [post]
 func CreateTemplate(c *gin.Context) {
 	data := make(map[string]interface{})
 	if err := zutils.GinBindJSON(c, &data); err != nil {
@@ -124,7 +124,7 @@ func CreateTemplate(c *gin.Context) {
 // @Param   template body meta.IndexTemplate true "Template data"
 // @Success 200 {object} meta.HTTPResponseTemplate
 // @Failure 400 {object} meta.HTTPResponseError
-// @Router /es/_index_template/{name} [put]
+// @Router /_index_template/{name} [put]
 func UpdateTemplateForSDK() {}
 
 // @Id DeleteTemplate
@@ -135,7 +135,7 @@ func UpdateTemplateForSDK() {}
 // @Param   name  path  string  true  "Template"
 // @Success 200 {object} meta.HTTPResponse
 // @Failure 400 {object} meta.HTTPResponseError
-// @Router /es/_index_template/{name} [delete]
+// @Router /_index_template/{name} [delete]
 func DeleteTemplate(c *gin.Context) {
 	name := c.Param("target")
 	err := core.DeleteTemplate(name)

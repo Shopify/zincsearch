@@ -16,44 +16,12 @@
 package routes
 
 import (
-	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/zincsearch/zincsearch/pkg/auth"
 	"github.com/zincsearch/zincsearch/pkg/core"
-	"github.com/zincsearch/zincsearch/pkg/meta"
 )
-
-func AuthMiddleware(permission string) func(c *gin.Context) {
-	auth.AddPermission(permission)
-	return func(c *gin.Context) {
-		if !meta.IsAuthEnabled() {
-			c.Next()
-			return
-		}
-
-		// Get the Basic Authentication credentials
-		user, password, hasAuth := c.Request.BasicAuth()
-		if hasAuth {
-			if u, ok := auth.VerifyCredentials(user, password); ok {
-				if auth.VerifyRoleHasPermission(u.Role, permission) {
-					c.Next()
-				} else {
-					c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "No permission:" + permission})
-					return
-				}
-			} else {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"auth": "Invalid credentials"})
-				return
-			}
-		} else {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"auth": "Missing credentials"})
-			return
-		}
-	}
-}
 
 func ESMiddleware(c *gin.Context) {
 	// Some es clients will check header("X-elastic-product") == "Elasticsearch".

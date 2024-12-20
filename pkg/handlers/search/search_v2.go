@@ -44,7 +44,7 @@ import (
 // @Param   query  body  meta.ZincQueryForSDK true  "Query"
 // @Success 200 {object} meta.SearchResponse
 // @Failure 400 {object} meta.HTTPResponseError
-// @Router /es/{index}/_search [post]
+// @Router /{index}/_search [post]
 func SearchDSL(c *gin.Context) {
 	indexName := c.Param("target")
 
@@ -109,7 +109,7 @@ func CountDSL(c *gin.Context) {
 // @Param   query  body  string  true  "Query"
 // @Success 200 {object} meta.SearchResponse
 // @Failure 400 {object} meta.HTTPResponseError
-// @Router /es/_msearch [post]
+// @Router /_msearch [post]
 func MultipleSearch(c *gin.Context) {
 	indexName := c.Param("target")
 	defaultIndexNames := make([]string, 0)

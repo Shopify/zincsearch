@@ -99,50 +99,50 @@ cd zinc
 
 ### Test ElasticSeacrch API (Test File : es_test.go)
 ---
-1. #### Test ES API with Endpoint /es/_bulk
+1. #### Test ES API with Endpoint /_bulk
    1. [Test Bulk Document Index](./test_docs/ES_API_1.md)
    2. [Test Bulk Document Delete](./test_docs/ES_API_1.md)
    3. [Test Bulk Document with error Input](./test_docs/ES_API_1.md)
 
-2. #### Test ES API with Endpoint /es/:target/_bulk
+2. #### Test ES API with Endpoint /:target/_bulk
    1. [Test Create Document with no existing Index](./test_docs/ES_API_2.md)
    2. [Test Create Document with existing Index](./test_docs/ES_API_2.md)
    3. [Test Bulk with error Input](./test_docs/ES_API_2.md)
 
-3. #### Test ES API with Endpoint /es/:target/_doc 
+3. #### Test ES API with Endpoint /:target/_doc 
    1. [Test Create Document with not existing Index](./test_docs/ES_API_3.md)
    2. [Test Create Document with existing Index](./test_docs/ES_API_3.md)
    3. [Test Create Document with existing Index and not existing Document ID](./test_docs/ES_API_3.md)
    4. [Test Update Document with existing Index and existing Document ID](./test_docs/ES_API_3.md)
    5. [Test Create Document with error Input](./test_docs/ES_API_3.md)
 
-4. #### Test ES API with Endpoint /es/:target/_doc/:id
+4. #### Test ES API with Endpoint /:target/_doc/:id
    1. [Test Update Document with no existing Index](./test_docs/ES_API_4.md)
    2. [Test Update Document with existing Index](./test_docs/ES_API_4.md)
    3. [Test Create Document with existing Index and not existing ID](./test_docs/ES_API_4.md)
    4. [Test Update Document with existing Index and existing ID](./test_docs/ES_API_4.md)
    5. [Test Update Document with error Input](./test_docs/ES_API_4.md)
 
-5. #### Test ES API with Endpoint /es/:target/_doc/:id
+5. #### Test ES API with Endpoint /:target/_doc/:id
    1. [Test Delete Document with not existing Index](./test_docs/ES_API_5.md)
    2. [Test Delete Document with existing Index and not existing ID](./test_docs/ES_API_5.md)
    3. [Test Delete Document with existing Index and existing ID](./test_docs/ES_API_5.md)
 
-6. #### Test ES API with Endpoint /es/:target/_create/:id (PUT)
+6. #### Test ES API with Endpoint /:target/_create/:id (PUT)
    1. [Test Update Document with no existing Index](./test_docs/ES_API_6.md)
    2. [Test Update Document with existing Index](./test_docs/ES_API_6.md)
    3. [Test Update Document with existing Index and not existing ID](./test_docs/ES_API_6.md)
    4. [Test Update Document with existing Index and existing ID](./test_docs/ES_API_6.md)
    5. [Test Update Document with error Input](./test_docs/ES_API_6.md)
 
-7. #### Test ES API with Endpoint /es/:target/_create/:id (POST)
+7. #### Test ES API with Endpoint /:target/_create/:id (POST)
    1. [Test Update Document with no existing Index](./test_docs/ES_API_7.md)
    2. [Test Update Document with existing Index](./test_docs/ES_API_7.md)
    3. [Test Update Document with existing Index and not existing ID](./test_docs/ES_API_7.md)
    4. [Test Update Document with existing Index and existing ID](./test_docs/ES_API_7.md)
    5. [Test Update Document with error Input](./test_docs/ES_API_7.md)
 
-8. #### Test ES API with Endpoint /es/:target/_update/:id 
+8. #### Test ES API with Endpoint /:target/_update/:id 
    1. [Test Update Document with no existing Index](./test_docs/ES_API_8.md)
    2. [Test Update Document with existing Index](./test_docs/ES_API_8.md)
    3. [Test Update Document with existing Index and not existing ID](./test_docs/ES_API_8.md)
@@ -175,7 +175,7 @@ cd zinc
 ---
 ### Test Document Searchv2 (Test File : search_v2_test.go)
 ---
-1. #### Test Search Document with Endpoint /es/:target/_search
+1. #### Test Search Document with Endpoint /:target/_search
    1. [Test Search Document with no existing Index](./test_docs/SEARCH_V2_1.md)
    2. [Test Search Document with existing Index](./test_docs/SEARCH_V2_1.md)
    3. [Test Search Document with no existing Term](./test_docs/SEARCH_V2_1.md)

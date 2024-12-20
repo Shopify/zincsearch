@@ -21,7 +21,7 @@ import (
 // @Param   h      query  string  false  "columns to display"
 // @Produce json/text
 // @Success 200 {object} IndexListResponse
-// @Router /es/_cat/indices/{target} [get]
+// @Router /_cat/indices/{target} [get]
 func CatIndices(c *gin.Context) {
 	format := c.DefaultQuery("format", "table")
 	verbose, _ := strconv.ParseBool(c.DefaultQuery("v", "false"))
@@ -168,7 +168,7 @@ type CatIndicesResponseItem struct {
 // @Param   h      query  string  false  "columns to display"
 // @Produce json/text
 // @Success 200 {object} IndexListResponse
-// @Router /es/_cat/aliases/{target} [get]
+// @Router /_cat/aliases/{target} [get]
 func CatAliases(c *gin.Context) {
 	format := c.DefaultQuery("format", "table")
 	verbose, _ := strconv.ParseBool(c.DefaultQuery("v", "false"))

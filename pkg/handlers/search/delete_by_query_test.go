@@ -89,7 +89,7 @@ func TestDeleteByQuery(t *testing.T) {
 			},
 		},
 		{
-			name: "should return bad request when no matching indices are found",
+			name: "should return not found when no matching indices are found",
 			arg: arg{
 				doc: map[string]interface{}{
 					"name": "zinc",
@@ -101,9 +101,9 @@ func TestDeleteByQuery(t *testing.T) {
 			},
 			want: want{
 				failure: failure{
-					statusCode: 400,
+					statusCode: 404,
 					body: body{
-						is: `{"error":"index noneMatchingIndex does not exists"}`,
+						is: `{"error":{"type":"index_not_found","reason":"index noneMatchingIndex does not exists"}}`,
 					},
 				},
 			},

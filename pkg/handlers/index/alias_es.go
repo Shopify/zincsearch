@@ -51,7 +51,7 @@ type base struct {
 // @Produce json
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} meta.HTTPResponseError
-// @Router /es/_aliases [post]
+// @Router /_aliases [post]
 func AddOrRemoveESAlias(c *gin.Context) {
 	var alias Alias
 	err := zutils.GinBindJSON(c, &alias)
@@ -113,7 +113,7 @@ func AddOrRemoveESAlias(c *gin.Context) {
 // @Param   target_alias path  string  false  "Target Alias"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} meta.HTTPResponseError
-// @Router /es/{target}/_alias/{target_alias} [get]
+// @Router /{target}/_alias/{target_alias} [get]
 func GetESAliases(c *gin.Context) {
 	targetIndex := c.Param("target")
 

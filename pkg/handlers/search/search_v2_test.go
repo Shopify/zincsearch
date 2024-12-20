@@ -57,7 +57,7 @@ func TestSearchDSL(t *testing.T) {
 		{
 			name: "index not found",
 			args: args{
-				code:   http.StatusBadRequest,
+				code:   http.StatusNotFound,
 				data:   `{"query":{"match_all":{}},"size":10}`,
 				params: map[string]string{"target": "NotExist" + indexName},
 				result: "does not exists",

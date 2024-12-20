@@ -33,7 +33,7 @@ func TestCatIndices(t *testing.T) {
 					"v":         verbose,
 					"h":         "health,status,index,uuid,pri,rep,docs.count,docs.deleted,store.size,pri.store.size",
 				}
-				utils.SetGinRequestURL(c, "/es/_cat/indices", params)
+				utils.SetGinRequestURL(c, "/_cat/indices", params)
 				CatIndices(c)
 				assert.Equal(t, http.StatusOK, w.Code)
 				assert.NotNil(t, w.Body)

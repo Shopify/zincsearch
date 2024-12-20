@@ -27,12 +27,6 @@ import (
 func TestApiBase(t *testing.T) {
 	t.Run("test base api", func(t *testing.T) {
 		r := server()
-		t.Run("/", func(t *testing.T) {
-			req, _ := http.NewRequest("GET", "/", nil)
-			resp := httptest.NewRecorder()
-			r.ServeHTTP(resp, req)
-			assert.Equal(t, http.StatusFound, resp.Code)
-		})
 		t.Run("/version", func(t *testing.T) {
 			req, _ := http.NewRequest("GET", "/version", nil)
 			resp := httptest.NewRecorder()
@@ -57,12 +51,6 @@ func TestApiBase(t *testing.T) {
 			status, ok := data["status"]
 			assert.True(t, ok)
 			assert.Equal(t, "ok", status)
-		})
-		t.Run("/ui", func(t *testing.T) {
-			req, _ := http.NewRequest("GET", "/ui/", nil)
-			resp := httptest.NewRecorder()
-			r.ServeHTTP(resp, req)
-			assert.Equal(t, http.StatusOK, resp.Code)
 		})
 	})
 }

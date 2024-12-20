@@ -33,6 +33,10 @@ func GinBindJSON(c *gin.Context, obj interface{}) error {
 }
 
 func GinBindJSONWithEmptyBody(c *gin.Context, obj interface{}) error {
+	if c.Request.Body == nil {
+		return json.Unmarshal([]byte("{}"), obj)
+	}
+
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		return err
