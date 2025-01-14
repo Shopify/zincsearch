@@ -25,9 +25,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
-
 	"github.com/zincsearch/zincsearch/pkg/config"
 	"github.com/zincsearch/zincsearch/pkg/core"
+	zincsearch_errors "github.com/zincsearch/zincsearch/pkg/errors"
 	"github.com/zincsearch/zincsearch/pkg/ider"
 	"github.com/zincsearch/zincsearch/pkg/zutils"
 	"github.com/zincsearch/zincsearch/pkg/zutils/json"
@@ -178,9 +178,13 @@ func BulkWorker(target string, body io.Reader) (*BulkResponse, error) {
 					res := map[string]BulkResponseItem{}
 					index, exists := core.GetIndex(indexName)
 					if exists {
-						//delete
-						err = index.DeleteDocument(docID)
-						res["delete"] = NewBulkResponseItem(bulkRes.Count, indexName, docID, "deleted", err, 200)
+						_, err := index.GetDocument(docID)
+						if err == zincsearch_errors.ErrorIDNotFound {
+							res["delete"] = NewBulkResponseItem(bulkRes.Count, indexName, docID, "not_found", err, 404)
+						} else {
+							err = index.DeleteDocument(docID)
+							res["delete"] = NewBulkResponseItem(bulkRes.Count, indexName, docID, "deleted", err, 200)
+						}
 					} else {
 						res["delete"] = NewBulkResponseItem(bulkRes.Count, indexName, docID, "noop", err, 404)
 						bulkRes.Errors = true
