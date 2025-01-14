@@ -223,7 +223,7 @@ func NewBulkResponseItem(seqNo int64, index, id, result string, err error, statu
 	if err != nil {
 		s_err = err.Error()
 	}
-	return BulkResponseItem{
+	response := BulkResponseItem{
 		Index:   index,
 		Type:    "_doc",
 		ID:      id,
@@ -237,8 +237,13 @@ func NewBulkResponseItem(seqNo int64, index, id, result string, err error, statu
 		Status:      status,
 		SeqNo:       globalSeqNo + seqNo,
 		PrimaryTerm: 1,
-		Error:       s_err,
 	}
+
+	if err != nil && err != zincsearch_errors.ErrorIDNotFound {
+		response.Error = s_err
+	}
+
+	return response
 }
 
 var globalSeqNo int64
